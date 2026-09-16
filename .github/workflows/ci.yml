@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/ci-github-actions
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v5
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore ProgramacionV.Api.csproj
+
+      - name: Compilar proyecto
+        run: dotnet build ProgramacionV.Api.csproj --configuration Release --no-restore
+
+      - name: Verificar resultado
+        run: "echo 'Pipeline exitoso: restauración y compilación correctas'"
